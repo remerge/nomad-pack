@@ -27,11 +27,13 @@ variable "datacenter" {
 variable "http_port" {
   description = "Port for accessing application"
   type        = number
+  default     = 0
 }
 
 variable "debug_port" {
   description = "Port for debugging application"
   type        = number
+  default     = 0
 }
 
 
