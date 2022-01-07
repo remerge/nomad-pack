@@ -6,13 +6,17 @@ job [[ .simple_service.job_name | quote ]] {
     count = [[ .simple_service.count ]]
 
     network {
+      [[ if neq .simple_service.http_port "" ]]
       port "http" {
         to = [[ .simple_service.http_port ]]
       }
-      
+      [[ end ]]
+
+      [[ if neq .simple_service.debug_port "" ]]
       port "debug" {
         to = [[ .simple_service.debug_port ]]
       }
+      [[ end ]]
     }
 
     task "server" {
