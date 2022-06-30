@@ -16,9 +16,11 @@ job [[ .simple_service.job_name | quote ]] {
     }
 
     task "server" {
+      [[- if  .simple_service.vault_policies -]]
       vault {
         policies = [[ .simple_service.vault_policies  | toJson ]]
       }
+      [[- end -]]
 
       service {
         name = [[ .simple_service.job_name | quote]]
@@ -44,8 +46,8 @@ job [[ .simple_service.job_name | quote ]] {
         ENVIRONMENT  = [[ .simple_service.environment | quote ]]
         MESSAGE  = [[ .simple_service.environment | quote ]]
       }
-      
 
+      [[- if not (eq .simple_service.consul_data "") -]]
       template {
           data = <<EOH
 [[ .simple_service.consul_data ]]
@@ -53,7 +55,9 @@ EOH
           destination = "secrets/consul.env"
           env         = true
       }
+      [[- end -]]
 
+      [[- if not (eq .simple_service.vault_data "") -]]
       template {
         data = <<EOH
 [[ .simple_service.vault_data ]]
@@ -61,6 +65,7 @@ EOH
         destination = "secrets/vault.env"
         env         = true
     }
+    [[- end -]]
 
       config {
         image = [[ .simple_service.task_image | quote ]]
